@@ -110,16 +110,7 @@ def update_custom_field(item_id, field_name, value):
         print("Custom field updated successfully.")
         return response
     
-def create_draft_issue(draft_issue, body):
-
-    account_name = draft_issue['account_name']
-    if not account_name:
-        raise ValueError("Account name is required.")
-    
-    PKEY_VALUE = draft_issue[PKEY]
-    if not PKEY_VALUE:
-        raise ValueError(f"`{PKEY}` was not found in record.")
-    
+def create_draft_issue(draft_issue):
     mutation = """
     mutation CreateDraftIssue($input: AddProjectV2DraftIssueInput!) {
         addProjectV2DraftIssue(input: $input) {
@@ -133,8 +124,8 @@ def create_draft_issue(draft_issue, body):
     variables = {
         "input": {
             "projectId": PROJECT_ID,
-            "title": account_name,
-            "body": body
+            "title": draft_issue.get('title', 'Untitled Issue'),
+            "body": draft_issue.get('body', '')
         }
     }
     
@@ -147,6 +138,8 @@ def create_draft_issue(draft_issue, body):
     
     # Loop all field names in the draft issue
     for field_name, value in draft_issue.items():
+        if field_name == 'title' or field_name == 'body':
+            continue
         print(f"Updating field: {field_name} with value: {value}")
         update_custom_field(response['data']['addProjectV2DraftIssue']['projectItem']['id'], field_name, value)
 
@@ -292,16 +285,20 @@ if __name__ == "__main__":
             raise ValueError("Record is required when operation is 'createOrUpdate'.")
     
         try:
-            draft_issue = json.loads(record)
+            project_issue = json.loads(record)
         except json.JSONDecodeError:
             raise ValueError("Invalid JSON string for RECORD.")
-        PKEY_VALUE = draft_issue.get(PKEY)
+        PKEY_VALUE = project_issue.get(PKEY)
         item = item_exists(PKEY_VALUE)
-        for key, value in draft_issue.items():
-            if key == PKEY:
-                continue
-            update_custom_field(item['id'], key, value)
-            
+        if item:
+            print(f"Item already exists. Proceeding to update...")
+            for key, value in project_issue.items():
+                if key == PKEY:
+                    continue
+                update_custom_field(item.get('id'), key, value)
+        else:
+            print("Item does not exist.")
+            create_draft_issue(project_issue, project_issue.get('body', ''))
     elif OPERATION == "removeItem":
         print("Initiating removeItem...")
         if not PKEY_VALUE:
