@@ -298,7 +298,7 @@ if __name__ == "__main__":
                 update_custom_field(item.get('id'), key, value)
         else:
             print("Item does not exist.")
-            create_draft_issue(project_issue, project_issue.get('body', ''))
+            create_draft_issue(project_issue)
     
     elif OPERATION == "removeItem":
         print("Initiating removeItem...")
