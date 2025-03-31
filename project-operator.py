@@ -218,7 +218,6 @@ def run_query_paginated(after=None):
         "after": after
     }
     response = run_graph_query(query, variables)
-    print(response)
     return response
 
 def get_all_items():
@@ -259,7 +258,7 @@ def get_all_items():
 def item_exists(primary_key_value):
     all_items = get_all_items()
     for item in all_items:
-        if item['customField']['text'] == primary_key_value:
+        if (item.get('customField') and item['customField'].get('text') == primary_key_value):
             print(f"Item with {primary_key_value} exists.")
             return item
     print(f"Item with {primary_key_value} does not exist.")
