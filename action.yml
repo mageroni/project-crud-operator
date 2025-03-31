@@ -58,3 +58,7 @@ runs:
         PKEY_VALUE: ${{ inputs.primary_key_value }}
         RECORD: ${{ inputs.record }}
       run: python ${{ github.action_path }}/project-operator.py
+
+branding:
+  color: 'blue'
+  icon: 'book'
