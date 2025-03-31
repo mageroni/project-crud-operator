@@ -144,7 +144,7 @@ def create_draft_issue(draft_issue):
         print(f"Updating field: {field_name} with value: {value}")
         update_custom_field(response['data']['addProjectV2DraftIssue']['projectItem']['id'], field_name, value)
 
-def add_issue_to_project(issue):
+def add_issue_to_project(issue_id):
     mutation = """
     mutation($input: AddProjectV2ItemByIdInput!) {
         addProjectV2ItemById(input: $input) {
@@ -158,7 +158,7 @@ def add_issue_to_project(issue):
     variables = {
         "input": {
             "projectId": PROJECT_ID,
-            "contentId": issue['id']
+            "contentId": issue_id
         }
     }
     
@@ -266,11 +266,12 @@ if __name__ == "__main__":
     PKEY_VALUE = os.getenv("PKEY_VALUE")
     PKEY = os.getenv("PKEY")
 
+    if not PKEY_VALUE or not PKEY:
+            raise ValueError("PKEY_VALUE and PKEY are required.")
+        
+
     if OPERATION == "getItem":
         print("Initiating getItem...")
-        
-        if not PKEY_VALUE:
-            raise ValueError("PKEY_VALUE is required when operation is 'getItem'.")
         
         item = item_exists(PKEY_VALUE)
         if item:
@@ -280,6 +281,7 @@ if __name__ == "__main__":
             
     elif OPERATION == "createOrUpdate":
         print("Initiating createOrUpdate...")
+
         record = os.getenv("RECORD")
         
         if not record:
@@ -303,8 +305,6 @@ if __name__ == "__main__":
     
     elif OPERATION == "removeItem":
         print("Initiating removeItem...")
-        if not PKEY_VALUE:
-            raise ValueError("PKEY_VALUE is required when operation is 'removeItem'.")
         
         item = item_exists(PKEY_VALUE)
         if item:
@@ -314,3 +314,12 @@ if __name__ == "__main__":
             print(f"Item `{PKEY_VALUE}` removed successfully.")
         else:        
             print("Item does not exist.")
+
+    elif OPERATION == "addItem":
+        print("Initiating addItem...")
+        
+        issue_id = os.getenv("ISSUE_ID")
+        if not issue_id:
+            raise ValueError("ISSUE_ID is required when operation is 'addItem'.")
+        
+        add_issue_to_project(issue_id)

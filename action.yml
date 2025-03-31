@@ -17,9 +17,12 @@ inputs:
     required: true
   primary_key_value:
     description: 'Value of primary key to lookup (required for getItem and removeItem operations)'
-    required: false
+    required: true
   record:
     description: 'JSON string representing the record (required for createOrUpdate operation)'
+    required: false
+  issue_id:
+    description: 'Issue ID to associate with the project item (required for createOrUpdate operation)'
     required: false
 
 outputs:

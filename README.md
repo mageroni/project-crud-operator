@@ -8,6 +8,7 @@ A GitHub Action for managing items in GitHub Projects (v2) through CRUD operatio
 - **Create new draft issues** in a GitHub Project with custom fields
 - **Update existing items** with new field values
 - **Remove items** from a GitHub Project
+- **Add issues** to a GitHub Project
 
 ## Setup
 
@@ -42,6 +43,7 @@ The `id` field in the response contains the GraphQL node ID you'll need for the 
 | `primary_key_field` | Primary key field name in the GitHub Project | Yes |
 | `primary_key_value` | Value of primary key to lookup | Yes |
 | `record` | JSON string representing the record (for createOrUpdate) | Only for createOrUpdate |
+| `issue_id` | Issue ID to be added to the GitHub Project | Only for addItem |
 
 ## Outputs
 
@@ -92,6 +94,20 @@ The `id` field in the response contains the GraphQL node ID you'll need for the 
     operation: removeItem
     primary_key_field: "Ticket ID"
     primary_key_value: "PROJ-123"
+```
+
+### Adding an Item
+
+```yaml
+- name: Add item to project
+  uses: mageroni/project-crud-operator@v1
+  with:
+    token: ${{ secrets.PROJECT_TOKEN }}
+    project_id: ${{ vars.PROJECT_ID }}
+    operation: addItem
+    primary_key_field: "Ticket ID"
+    primary_key_value: "PROJ-123"
+    issue_id: 1
 ```
 
 ## Important Notes
