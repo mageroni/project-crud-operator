@@ -137,6 +137,7 @@ def create_draft_issue(draft_issue):
         print("Draft issue created successfully.")
     
     # Loop all field names in the draft issue
+    update_custom_field(response['data']['addProjectV2DraftIssue']['projectItem']['id'], PKEY, PKEY_VALUE)
     for field_name, value in draft_issue.items():
         if field_name == 'title' or field_name == 'body':
             continue
