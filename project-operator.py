@@ -288,7 +288,7 @@ if __name__ == "__main__":
             project_issue = json.loads(record)
         except json.JSONDecodeError:
             raise ValueError("Invalid JSON string for RECORD.")
-        PKEY_VALUE = project_issue.get(PKEY)
+        
         item = item_exists(PKEY_VALUE)
         if item:
             print(f"Item already exists. Proceeding to update...")
@@ -299,6 +299,7 @@ if __name__ == "__main__":
         else:
             print("Item does not exist.")
             create_draft_issue(project_issue, project_issue.get('body', ''))
+    
     elif OPERATION == "removeItem":
         print("Initiating removeItem...")
         if not PKEY_VALUE:
