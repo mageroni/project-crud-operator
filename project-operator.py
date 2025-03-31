@@ -276,7 +276,7 @@ if __name__ == "__main__":
     PKEY = os.getenv("PKEY")
 
     if OPERATION == "getItem":
-        print("Entering getItem...")
+        print("Initiating getItem...")
         
         if not PKEY_VALUE:
             raise ValueError("PKEY_VALUE is required when operation is 'getItem'.")
@@ -288,6 +288,7 @@ if __name__ == "__main__":
             print("Item does not exist.")
             
     elif OPERATION == "createOrUpdate":
+        print("Initiating createOrUpdate...")
         record = os.getenv("RECORD")
         
         if not record:
@@ -305,6 +306,7 @@ if __name__ == "__main__":
             update_custom_field(item['id'], key, value)
             
     elif OPERATION == "removeItem":
+        print("Initiating removeItem...")
         if not PKEY_VALUE:
             raise ValueError("PKEY_VALUE is required when operation is 'removeItem'.")
         
