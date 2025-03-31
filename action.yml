@@ -1,0 +1,60 @@
+name: 'GitHub Project CRUD Operator'
+description: 'Create, read, update, and delete items in GitHub Projects'
+author: 'mageroni'
+
+inputs:
+  token:
+    description: 'GitHub personal access token with project permissions'
+    required: true
+  project_id:
+    description: 'GitHub Project v2 ID (GraphQL node ID)'
+    required: true
+  operation:
+    description: 'Operation to perform (getItem, createOrUpdate, removeItem)'
+    required: true
+  primary_key_field:
+    description: 'Primary key field name in the GitHub Project'
+    required: true
+  primary_key_value:
+    description: 'Value of primary key to lookup (required for getItem and removeItem operations)'
+    required: false
+  record:
+    description: 'JSON string representing the record (required for createOrUpdate operation)'
+    required: false
+
+outputs:
+  result:
+    description: 'Result of the operation (JSON string)'
+  success:
+    description: 'Boolean indicating if the operation was successful'
+  message:
+    description: 'Message describing the result of the operation'
+  item_id:
+    description: 'ID of the affected item (if applicable)'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+    
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests python-dotenv
+    
+    - name: Execute Project CRUD Operation
+      shell: bash
+      env:
+        PROJECT_TOKEN: ${{ inputs.token }}
+        PROJECT_ID: ${{ inputs.project_id }}
+        OPERATION: ${{ inputs.operation }}
+        PKEY: ${{ inputs.primary_key_field }}
+        PKEY_VALUE: ${{ inputs.primary_key_value }}
+        RECORD: ${{ inputs.record }}
+      run: python ${{ github.action_path }}/project-operator.py
