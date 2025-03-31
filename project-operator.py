@@ -200,7 +200,7 @@ def run_query_paginated(after=None):
                               title
                             }
                         }
-                        customField : fieldValueByName(name: """ + "\"" + PKEY + + "\"" + """) {
+                        customField : fieldValueByName(name: """ + "\"" + PKEY + "\"" + """) {
                             ... on ProjectV2ItemFieldTextValue {
                                 text
                             }
