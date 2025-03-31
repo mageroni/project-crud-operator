@@ -200,7 +200,7 @@ def run_query_paginated(after=None):
                               title
                             }
                         }
-                        """ + PKEY + """: fieldValueByName(name: "
+                        customField : fieldValueByName(name: "
                         """ + PKEY + """
                         ") {
                             ... on ProjectV2ItemFieldTextValue {
@@ -261,7 +261,7 @@ def get_all_items():
 def item_exists(primary_key_value):
     all_items = get_all_items()
     for item in all_items:
-        if item[PKEY]['text'] == primary_key_value:
+        if item[customField]['text'] == primary_key_value:
             print(f"Item with {primary_key_value} exists.")
             return item
     print(f"Item with {primary_key_value} does not exist.")
