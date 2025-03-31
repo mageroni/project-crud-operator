@@ -200,9 +200,7 @@ def run_query_paginated(after=None):
                               title
                             }
                         }
-                        customField : fieldValueByName(name: "
-                        """ + PKEY + """
-                        ") {
+                        customField : fieldValueByName(name: """ + "\"" + PKEY + + "\"" + """) {
                             ... on ProjectV2ItemFieldTextValue {
                                 text
                             }
@@ -220,7 +218,6 @@ def run_query_paginated(after=None):
         "after": after
     }
     response = run_graph_query(query, variables)
-    print(response)
     return response
 
 def get_all_items():
