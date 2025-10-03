@@ -31,6 +31,7 @@ def get_field_id(field_name):
                         ... on ProjectV2FieldCommon {
                             id
                             name
+                            dataType
                         }
                     }
                 }
@@ -45,10 +46,10 @@ def get_field_id(field_name):
         fields = response['data']['node']['fields']['nodes']
         for field in fields:
             if field['name'] == field_name:
-                return field['id']
+                return (field['id'], field.get('dataType'))
     except:
         print(f"Failure with field: {field_name}")
-    return None
+    return (None, None)
 
 def remove_item(item_id):
     mutation = """
@@ -74,15 +75,19 @@ def update_custom_field(item_id, field_name, value):
     print(f"FIELD NAME:: {field_name}")
     print(f"VALUE NAME:: {value}")
 
-    field_id = get_field_id(field_name)
+    field_id, data_type = get_field_id(field_name)
     if not field_id:
         print(f"Field ID not found for field name: {field_name}")
         return
 
-    elif isinstance(value, int):
-        value = {"number": value} 
-    elif not isinstance(value, dict):
-        value = {"text": value}  # Wrap the value in a key-value object
+    # Format value based on dataType instead of isinstance checks
+    if not isinstance(value, dict):
+        if data_type == "NUMBER":
+            value = {"number": value}
+        elif data_type == "DATE":
+            value = {"date": value}
+        else:  # Default to TEXT for TEXT and other types
+            value = {"text": value}
 
     mutation = """
     mutation($input: UpdateProjectV2ItemFieldValueInput!) {
