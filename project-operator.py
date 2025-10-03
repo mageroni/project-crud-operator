@@ -80,7 +80,7 @@ def update_custom_field(item_id, field_name, value):
         print(f"Field ID not found for field name: {field_name}")
         return
 
-    # Format value based on dataType instead of isinstance checks
+    # Format value based on dataType from API (unless already formatted as dict)
     if not isinstance(value, dict):
         if data_type == "NUMBER":
             value = {"number": value}
