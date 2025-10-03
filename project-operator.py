@@ -86,7 +86,11 @@ def update_custom_field(item_id, field_name, value):
             value = {"number": value}
         elif data_type == "DATE":
             value = {"date": value}
-        else:  # Default to TEXT for TEXT and other types
+        elif data_type == "TEXT" or data_type is None:
+            # Default to TEXT for TEXT type or when dataType is not available
+            value = {"text": value}
+        else:
+            # For any other dataType, default to text
             value = {"text": value}
 
     mutation = """
